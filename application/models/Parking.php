@@ -2,11 +2,11 @@
 
 class Parking extends CI_Model
 {
-	protected $regNum;
-	protected $dateTime;
-	protected $locationId;
-	protected $isParked;
-	protected $noHour;
+	protected $reg_num;
+	protected $date_time;
+	protected $location_id;
+	protected $is_parked;
+	protected $no_hour;
 	protected $id;
 	protected $checkout;
 
@@ -17,23 +17,23 @@ class Parking extends CI_Model
 
     public function getRegNum()
     {
-    	return $this->regNum;
+    	return $this->reg_num;
     }
      public function getDateTime()
     {
-    	return $this->dateTime;
+    	return $this->date_time;
     }
      public function getLocationId()
     {
-    	return $this->locationId;
+    	return $this->location_id;
     }
      public function getIsParked()
     {
-    	return $this->isParked;
+    	return $this->is_parked;
     }
      public function getNoHour()
     {
-    	return $this->noHour;
+    	return $this->no_hour;
     }
      public function getId()
     {
@@ -44,26 +44,26 @@ class Parking extends CI_Model
     	return $this->checkout;
     }
 
-    public function setRegNum($regNum)
+    public function setRegNum($reg_num)
     {
-    	 $this->regNum = $regNum;
+    	 $this->reg_num = $reg_num;
     }
-    public function setDateTime($dateTime)
+    public function setDateTime($date_time)
     {
-    	 $this->dateTime = $dateTime;
+    	 $this->date_time = $date_time;
     }
-    public function setLocationId($locationId)
+    public function setLocationId($location_id)
     {
-    	 $this->locationId = $locationId;
+    	 $this->location_id = $location_id;
     }
 
-    public function setIsParked($isParked)
+    public function setIsParked($is_parked)
     {
-    	 $this->isParked = $isParked;
+    	 $this->is_parked = $is_parked;
     }
-    public function setNoHour($noHour)
+    public function setNoHour($no_hour)
     {
-    	 $this->noHour = $noHour;
+    	 $this->no_hour = $no_hour;
     }
     public function setId($id)
     {
@@ -88,8 +88,8 @@ class Parking extends CI_Model
 	    return $result_array;
     }
 
-    public function get($regId) {
-        $this->db->where('reg_id', $regId);
+    public function get($reg_num) {
+        $this->db->where('reg_num', $reg_num);
         $park = $this->db->get('parking');
         return $this->loadObject($park->row_array());
     }
