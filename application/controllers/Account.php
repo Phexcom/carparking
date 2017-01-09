@@ -134,9 +134,13 @@ class Account extends CI_Controller {
 				$this->load->database();
 				$last_id = $this->db-insert_id();
 				$random = $this->encryption->create_key(20);
+				$activation = new Activation();
+				$activation->setAccountId($last_id);
+				$activation->setToken($random);
+				$this->activation->create($activation);
+				// Send email
 				$token = $random . $last_id;
-				// $activation = new Activation();
-				// $activation->create($last_id,$random);
+				$this->__sendMail($user->getEmail(),$token);
 				$this->session->set_flashdata('message','Registration Successful');
 				return redirect('/account/login/');
 			}
@@ -154,5 +158,14 @@ class Account extends CI_Controller {
 		$this->load->library('encryption');
 		var_dump($this->encryption->encrypt('somemail@mail.me'));
 
+	}
+
+	private function __sendMail($email,$token) {
+		$this->load->library('email');
+		$this->email->from('carphex@gmail.com', 'Carphex');
+		$this->email->to('phexcom022@gmail.com');
+		$this->email->subject('Email Test');
+		$this->email->message('Testing the email class.');
+		$this->email->send();
 	}
 }
