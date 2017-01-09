@@ -18,7 +18,9 @@
       <?php echo anchor('account/login','Login now!',['class'=>'btn btn-success btn-lg']); ?>
     </p>
     <p>If not?</p>
-    <p><a href="/register" class="btn btn-danger btn-lg" >Register Now!</a></p>
+    <p>
+    <?php echo anchor('account/register','Register now!',['class'=>'btn btn-danger btn-lg']); ?>
+    </p>
 
   </div>
   <!-- end jumbotron -->
