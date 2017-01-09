@@ -55,7 +55,7 @@ class User extends CI_Model
 
     public function getIsActivated()
     {
-        return $this->$is_activated;
+        return $this->is_activated;
     }
 
     public function setId($id)
@@ -90,17 +90,17 @@ class User extends CI_Model
 
     public function setIsActivated($isActivated)
     {
-        $this->$is_activated = $isActivated;
+        $this->is_activated = $isActivated;
     }
 
-    public static function create(User $user)
+    public function create(User $user)
     {
         unset($user->is_admin);
         unset($user->is_activated);
         return $this->db->insert('user', $user);
     }
 
-    public static function getAll()
+    public function getAll()
     {
         $user = $this->db->get('user');
         $result_array = [];
@@ -110,26 +110,36 @@ class User extends CI_Model
         return $result_array;
     }
 
-    public static function get($regId)
+    public function get($regId)
     {
         $this->db->where('id', $regId);
         $user = $this->db->get('user');
-        return $this->loadObject($park->row_array());
+        return $this->loadObject($user->row_array());
     }
 
-    public static function update(Parking$user)
+    public function getByEmail($email)
+    {
+        $this->db->where('email', $email);
+        $user = $this->db->get('user');
+        return $this->loadObject($user->row_array());
+    }
+
+    public function update(Parking$user)
     {
     }
 
-    private function loadObject(array $result)
+    private function loadObject(array $result = null)
     {
-        $user = new Park();
+        if (!$result) return false;
+        $user = new User();
         $user->setId($result['id']);
         $user->setName($result['name']);
         $user->setBillingAddress($result['billing_address']);
         $user->setCardNo($result['card_no']);
         $user->setEmail($result['email']);
-        $user->setIsAdmin($result['isAdmin']);
-        return$user;
+        $user->setIsAdmin($result['is_admin']);
+        $user->password= $result['password'];
+        $user->setIsActivated($result['is_activated']);
+        return $user;
     }
 }

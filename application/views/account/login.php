@@ -7,6 +7,11 @@
 
 <div class="container">
     <div class="jumbotron">
+ <?php if (isset($error)): ?>
+    <div class="alert alert-danger">
+        <?=$error;?>
+    </div>
+<?php endif; ?>   
 <?php echo form_open(); ?>
 
 <div class="form-group input-group-lg">
