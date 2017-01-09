@@ -1,0 +1,11 @@
+body{
+	background-image: url("../images/bg.jpg");
+	 background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+.center{
+	text-align: center;
+}
+
