@@ -1,7 +1,7 @@
 <?php
 
 
-class Payment extends CI_Model
+class User extends CI_Model
 {
 	protected $id;
 	protected $name;
@@ -9,6 +9,7 @@ class Payment extends CI_Model
 	protected $cardNo;
 	protected $email;
 	protected $isAdmin;
+    protected $password;
 
 	public function __construct() {
         parent::__construct();
@@ -45,6 +46,11 @@ class Payment extends CI_Model
     	return $this->isAdmin;
     }
 
+    public function getPassword()
+    {
+    	return $this->password;
+    }
+
 
     public function setId($id)
     {
@@ -69,6 +75,11 @@ class Payment extends CI_Model
      public function setIsAdmin($isAdmin)
     {
     	 $this->isAdmin = $isAdmin;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function create(User $user) {
