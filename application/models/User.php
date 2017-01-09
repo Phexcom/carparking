@@ -3,78 +3,84 @@
 
 class User extends CI_Model
 {
-	protected $id;
-	protected $name;
-	protected $billingAddress;
-	protected $cardNo;
-	protected $email;
-	protected $isAdmin;
-    protected $password;
+    public $id;
+    public $name;
+    public $billing_address;
+    public $card_no;
+    public $email;
+    public $is_admin;
+    public $password;
+    public $is_activated;
 
-	public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->database();
     }
 
     public function getId()
     {
-    	return $this->id;
+        return $this->id;
     }
 
     public function getName()
     {
-    	return $this->name;
+        return $this->name;
     }
 
     public function getBillingAddress()
     {
-    	return $this->billingAddress;
+        return $this->billing_address;
     }
 
     public function getCardNo()
     {
-    	return $this->cardNo;
+        return $this->card_no;
     }
 
     public function getEmail()
     {
-    	return $this->email;
+        return $this->email;
     }
 
     public function getIsAdmin()
     {
-    	return $this->isAdmin;
+        return $this->is_admin;
     }
 
     public function getPassword()
     {
-    	return $this->password;
+        return $this->password;
     }
 
+    public function getIsActivated()
+    {
+        return $this->$is_activated;
+    }
 
     public function setId($id)
     {
-    	 $this->id = $id;
+         $this->id = $id;
     }
-     public function setName($name)
+    public function setName($name)
     {
-    	 $this->name = $name;
+        $this->name = $name;
     }
-     public function setBillingAddress($billingAddress)
+    public function setBillingAddress($billingAddress)
     {
-    	 $this->billingAddress = $billingAddress;
+        $this->billing_address = $billingAddress;
     }
-     public function setCardNo($cardNo)
+    public function setCardNo($cardNo)
     {
-    	 $this->cardNo = $cardNo;
+        $this->card_no = $cardNo;
     }
-     public function setEmail($email)
+    public function setEmail($email)
     {
-    	 $this->email = $email;
+        $this->email = $email;
     }
-     public function setIsAdmin($isAdmin)
+    public function setIsAdmin($isAdmin)
     {
-    	 $this->isAdmin = $isAdmin;
+        $this->is_admin = $isAdmin;
     }
 
     public function setPassword($password)
@@ -82,41 +88,48 @@ class User extends CI_Model
         $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
-    public function create(User $user) {
-
+    public function setIsActivated($isActivated)
+    {
+        $this->$is_activated = $isActivated;
     }
 
-    public function getAll() {
-	   $user = $this->db->get('user');
-	    $result_array = [];
-	    foreach ($user->result_array() as $row ) {
-	        $result_array[] = $this->loadObject($row);
-	    }
-	    return $result_array;
+    public static function create(User $user)
+    {
+        unset($user->is_admin);
+        unset($user->is_activated);
+        return $this->db->insert('user', $user);
     }
 
-    public function get($regId) {
+    public static function getAll()
+    {
+        $user = $this->db->get('user');
+        $result_array = [];
+        foreach ($user->result_array() as $row) {
+            $result_array[] = $this->loadObject($row);
+        }
+        return $result_array;
+    }
+
+    public static function get($regId)
+    {
         $this->db->where('id', $regId);
-       $user = $this->db->get('user');
+        $user = $this->db->get('user');
         return $this->loadObject($park->row_array());
     }
 
-    public function update(Parking$user) {
-
+    public static function update(Parking$user)
+    {
     }
 
-     public function loadObject(array $result) {
-       $user = new Park();
-       $user->setId($result['id']);
-       $user->setName($result['name']);
-       $user->setBillingAddress($result['billing_address']);
-       $user->setCardNo($result['card_no']);
-       $user->setEmail($result['email']);
-       $user->setIsAdmin($result['isAdmin']);
+    private function loadObject(array $result)
+    {
+        $user = new Park();
+        $user->setId($result['id']);
+        $user->setName($result['name']);
+        $user->setBillingAddress($result['billing_address']);
+        $user->setCardNo($result['card_no']);
+        $user->setEmail($result['email']);
+        $user->setIsAdmin($result['isAdmin']);
         return$user;
     }
-
-
-
-
 }
