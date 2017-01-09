@@ -6,4 +6,71 @@ class Account extends CI_Controller {
 	{
 		$this->load->view('account/index');
 	}
+
+	public function login()
+	{
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+	}
+
+	public function register()
+	{
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->load->model('user');
+
+		// validation rules
+		$this->form_validation->set_rules(
+			'name', 
+			'Full Name',
+			['trim','required']
+		);
+		$this->form_validation->set_rules(
+			'address',
+			'Billing address',
+			['trim','required']
+		);
+		$this->form_validation->set_rules(
+			'card',
+			'Credit card no.',
+			['trim','required','is_natural',
+			function($string){
+				// before returning false
+				$this->form_validation->set_message('card', 'The credit ca');
+			}]
+		);
+		$this->form_validation->set_rules(
+			'email',
+			'Email',
+			['trim','required','valid_email','is_unique[user.email]'],
+			['is_unique' => "Email address is already registered."]
+		);
+		$this->form_validation->set_rules(
+			'password',
+			'password',
+			['trim','required','min_length[8]']
+		);
+		$this->form_validation->set_rules(
+			'password_confirm',
+			'password confirmation',
+			['trim','matches[password]']
+		);
+
+		if ($this->input->method(TRUE) === "POST") {
+			if ($this->form_validation->run() == TRUE) {
+				$user = new User();
+				$user->setName($this->input->post('name'));
+				$user->setBillingAddress($this->input->post('address'));
+				$user->setCardNo($this->input->post('card'));
+				$user->setEmail($this->input->post('email'));
+				$user->setPassword($this->input->post('password'));
+				$this->user->create($user);
+				$this->session->set_flashdata('message','Registration Succesfull');
+				return redirect('/account/login/');
+			}
+		}
+		$this->load->view('layout/header',['title' => "Car Park | Register"]);
+		$this->load->view('account/register');
+		$this->load->view('layout/footer');
+	}
 }
