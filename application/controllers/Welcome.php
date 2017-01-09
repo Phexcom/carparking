@@ -20,8 +20,8 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->model("location");
-		$data['some_data'] = $this->location->getAll();
+		$this->load->model("payment");
+		$data['some_data'] = $this->payment->getAll();
 		$this->load->view('welcome_message',$data);
 	}
 }
