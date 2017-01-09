@@ -8,7 +8,7 @@
     <meta name="keywords" content="">
     <meta name="author" content="">
 
-    <title>Car</title>
+    <title><?php echo $title; ?></title>
     <link href="/css/font-awesome.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>

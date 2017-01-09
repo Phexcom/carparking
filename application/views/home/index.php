@@ -14,14 +14,12 @@
   <div class="jumbotron center">
     <h1>Car Parking</h1>
     <p>Do you Already Have an Account?</p>
-    <p><a href="/login" class="btn btn-success btn-lg" >Login now!</a></p>
+    <p>
+      <?php echo anchor('account/login','Login now!',['class'=>'btn btn-success btn-lg']); ?>
+    </p>
     <p>If not?</p>
-    <p><a href="/register"  class="btn btn-danger btn-lg" >Register Now!</a></p>
+    <p><a href="/register" class="btn btn-danger btn-lg" >Register Now!</a></p>
 
-
-
-
- 
   </div>
   <!-- end jumbotron -->
 
