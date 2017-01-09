@@ -18,7 +18,7 @@
 
 <div class="form-group input-group-lg">
     <label for="password">Password:</label>
-    <input name="password"  class="form-control" placeholder="Enter Password" type="password"  />
+    <input name="password"  class="form-control" placeholder="Enter Password" type="password" required="required"  />
     <?php echo form_error('password','<div class="alert alert-danger text-center">','</div>'); ?>      
 </div>
 
