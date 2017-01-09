@@ -3,7 +3,7 @@
 class Payment extends CI_Model
 {
 	protected $id;
-	protected $parkingId;
+	protected $parking_id;
 	protected $amount;
 
 	public function __construct() {
@@ -17,7 +17,7 @@ class Payment extends CI_Model
     }
      public function getParkingId()
     {
-    	return $this->parkingId;
+    	return $this->parking_id;
     }
      public function getAmount()
     {
@@ -30,7 +30,7 @@ class Payment extends CI_Model
     }
      public function setParkingId()
     {
-    	$this->parkingId = $parkingId;
+    	$this->parking_id = $parking_id;
     }
      public function setAmount($amount)
     {

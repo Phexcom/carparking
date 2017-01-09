@@ -3,7 +3,7 @@
 class Car extends CI_Model
 {
 
-	protected $regId;
+	protected $reg_id;
 
     protected $color;
 
@@ -19,7 +19,7 @@ class Car extends CI_Model
     }
 
     public function getRegId() {
-        return $this->regId;
+        return $this->reg_id;
     }
      public function getColor() {
         return $this->color;
@@ -34,8 +34,8 @@ class Car extends CI_Model
         return $this->owner;
     }
 
-    public function setRegId($regId) {
-        $this->regId = $regId;
+    public function setRegId($reg_id) {
+        $this->reg_id = $reg_id;
     }
     public function setColor($color) {
         $this->color = $color;
@@ -63,8 +63,8 @@ class Car extends CI_Model
 	    return $result_array;
     }
 
-    public function get($regId) {
-        $this->db->where('reg_id', $regId);
+    public function get($reg_id) {
+        $this->db->where('reg_id', $reg_id);
         $car = $this->db->get('car');
         return $this->loadObject($car->row_array());
     }
