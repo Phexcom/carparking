@@ -124,8 +124,10 @@ class User extends CI_Model
         return $this->loadObject($user->row_array());
     }
 
-    public function update(Parking$user)
+    public function activate($user_id)
     {
+        $this->db->where('id', $user_id);
+        // TODO: complete
     }
 
     private function loadObject(array $result = null)

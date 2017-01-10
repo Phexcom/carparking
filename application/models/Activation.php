@@ -30,7 +30,7 @@ class Activation extends CI_Model
 
     public function setToken($token)
     {
-        $this->account_id = $token;
+        $this->token = $token;
     }
 
     public function create(Activation $activation) {
@@ -40,8 +40,15 @@ class Activation extends CI_Model
     public function get($account_id, $token)
     {
         $this->db->where('account_id', $account_id);
+        $this->db->where('token', $token);
         $activate = $this->db->get('activation');
         return $this->loadObject($activate->row_array());
+    }
+
+    public function delete($account_id, $token) {
+        $this->db->where('account_id', $account_id);
+        $this->db->where('token', $token);
+        // TODO: complete
     }
 
     public function loadObject(array $result = null)
