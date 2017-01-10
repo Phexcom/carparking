@@ -132,7 +132,7 @@ class Account extends CI_Controller {
 				$this->user->create($user);
 				// store token and send email
 				$this->load->database();
-				$last_id = $this->db-insert_id();
+				$last_id = $this->db->insert_id();
 				$random = $this->encryption->create_key(20);
 				$activation = new Activation();
 				$activation->setAccountId($last_id);
