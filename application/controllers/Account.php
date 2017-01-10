@@ -184,8 +184,8 @@ class Account extends CI_Controller {
 		$link = site_url('/activate/'.$token.'/');
 		$this->email->from('carphex@gmail.com', 'Carphex');
 		$this->email->to($user->getEmail());
-		$this->email->subject('Email Test');
-		$this->email->message('Testing the email class.'.$link);
+		$this->email->subject('Verification Email from Car Parking');
+		$this->email->message('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Email Verification</title></head><body><p>Hello '.$user->getName().' </p><p>	Thank you for Registering on Car Parking.</p><br><br><p>Click the link below to activate your account.</p><p><a href="'.$link.'">Activate</a></p><br><br><p>After Activation you will be able to login with your account Username: '.$user->getName().' with the password you created</p></body></html>');
 		$this->email->send();
 	}
 

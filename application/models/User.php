@@ -127,7 +127,8 @@ class User extends CI_Model
     public function activate($user_id)
     {
         $this->db->where('id', $user_id);
-        // TODO: complete
+        $this->db->set('is_activated', 1);
+        $this->db->insert('user');
     }
 
     private function loadObject(array $result = null)

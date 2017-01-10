@@ -1,8 +1,10 @@
+<div class="container">
 <?php if ($this->session->flashdata('message')): ?>
-    <div class="alert alert-info">
+    <div class="alert alert-warning alert-dismissible hidden-xs center">
         <?=$this->session->flashdata('message')?>
     </div>
 <?php endif; ?>
+</div>
 
 
 <div class="container">

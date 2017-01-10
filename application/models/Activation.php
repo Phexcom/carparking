@@ -48,7 +48,7 @@ class Activation extends CI_Model
     public function delete($account_id, $token) {
         $this->db->where('account_id', $account_id);
         $this->db->where('token', $token);
-        // TODO: complete
+        $this->db->delete('activation');
     }
 
     public function loadObject(array $result = null)
