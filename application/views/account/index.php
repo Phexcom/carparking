@@ -10,7 +10,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" style="font-size:1.8em; font-weight:bold; font-family:ubuntu;">
-       Car
+        <?php echo $title; ?>
       </a>
     </div>
     <div class="navbar-collapse collapse" id="navbar-collapse-main">
@@ -23,7 +23,7 @@
 
         <ul class="nav navbar-nav navbar-right m-r-0 hidden-xs">
           <li >
-            <a class="app-notifications" href="notifications/index.html">
+            <a class="app-notifications" href="#">
               <span class="icon icon-bell"></span>
             </a>
           </li>
@@ -46,7 +46,7 @@
         </ul>
 
         <ul class="nav navbar-nav hidden">
-          <li><a href="login/index.html">Logout</a></li>
+          <li><a href="#">Logout</a></li>
         </ul>
       </div>
   </div>

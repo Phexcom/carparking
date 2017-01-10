@@ -128,7 +128,7 @@ class User extends CI_Model
     {
         $this->db->where('id', $user_id);
         $this->db->set('is_activated', 1);
-        $this->db->insert('user');
+        $this->db->update('user');
     }
 
     private function loadObject(array $result = null)

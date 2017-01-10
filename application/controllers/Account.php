@@ -4,9 +4,14 @@ class Account extends CI_Controller {
 
     public function index()
 	{
+		$this->load->view(
+			'layout/header', 
+			['title' => "Car Park"]
+		);
 		$this->load->view('account/index');
+		$this->load->view('layout/footer');
 	}
-
+	//Handling User Login
 	public function login()
 	{
 		$this->load->helper('form');
@@ -46,10 +51,10 @@ class Account extends CI_Controller {
 						);
 						return redirect('/account/');	
 					} else {
-						$data['error'] = "Account not activated";
+						$data['error'] = "Account not activated. Please check your email for activation link";
 					}	
 				} else {
-					$data['error'] = "Invalid email/password";
+					$data['error'] = "Invalid email OR password";
 				}
 			}
 		}
@@ -57,7 +62,7 @@ class Account extends CI_Controller {
 		$this->load->view('account/login',$data);
 		$this->load->view('layout/footer');
 	}
-
+	//Handling User registeration
 	public function register()
 	{
 		$this->load->helper('form');
@@ -147,7 +152,7 @@ class Account extends CI_Controller {
 				// Send email
 				$token = $random . $last_id;
 				$this->__sendMail($user, $token);
-				$this->session->set_flashdata('message','Registration Successful');
+				$this->session->set_flashdata('message','Registration Successful. Check your email for activation link');
 				return redirect('/account/login/');
 			}
 		}
@@ -155,7 +160,7 @@ class Account extends CI_Controller {
 		$this->load->view('account/register');
 		$this->load->view('layout/footer');
 	}
-
+	//Activating User account
 	public function activate($token)
 	{
 		if (strlen($token) < 21) {
@@ -167,21 +172,26 @@ class Account extends CI_Controller {
 			return redirect('/');
 		}
 		$this->load->model(['activation','user']);
-		$activation = $this->activation->get($id,$token);
+		$activation = $this->activation->get($id,$token_string);
+		// var_dump($id);
+		// var_dump($token);
+		// var_dump($token_string);
+		// die();
 		if (!$activation) {
+			$this->session->set_flashdata('message','Account Activation Failed');
 			return redirect('/');
 		}
-		$this->activation->delete();
+		$this->activation->delete($id,$token_string);
 		// Activate user in User table
 		$this->user->activate($id);
 		$this->session->set_flashdata('message','Activation successful.
 		 Login below');
 		return redirect('/account/login');
 	}
-
+	//Sending Activation Email
 	private function __sendMail($user, $token) {
 		$this->load->library('email');
-		$link = site_url('/activate/'.$token.'/');
+		$link = site_url('/account/activate/'.$token.'/');
 		$this->email->from('carphex@gmail.com', 'Carphex');
 		$this->email->to($user->getEmail());
 		$this->email->subject('Verification Email from Car Parking');

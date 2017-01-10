@@ -7,6 +7,14 @@
     </div>
   </div>
 </nav>
+<br>
+<div class="container">
+<?php if ($this->session->flashdata('message')): ?>
+    <div class="alert alert-danger alert-dismissible hidden-xs center">
+        <strong><?=$this->session->flashdata('message')?></strong>
+    </div>
+<?php endif; ?>
+</div>
 
 
 <div class="container">

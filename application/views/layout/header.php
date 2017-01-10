@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="carParking" >
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Car Park Management system">
+    <meta name="keywords" content="carparking, carpark, park">
+    <meta name="author" content="Phexcom">
 
     <title><?php echo $title; ?></title>
     <link href="/css/font-awesome.css" rel="stylesheet">
