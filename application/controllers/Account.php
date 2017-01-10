@@ -61,7 +61,7 @@ class Account extends CI_Controller {
 	public function register()
 	{
 		$this->load->helper('form');
-		$this->load->library(['form_validation','encryption']);
+		$this->load->library(['form_validation']);
 		$this->load->model(['user','activation']);
 
 		// validation rules
@@ -123,24 +123,30 @@ class Account extends CI_Controller {
 
 		if ($this->input->method(TRUE) === "POST") {
 			if ($this->form_validation->run() == TRUE) {
+				$this->load->database();
+				$this->db->trans_begin();
 				$user = new User();
 				$user->setName($this->input->post('name'));
 				$user->setBillingAddress($this->input->post('address'));
 				$user->setCardNo($this->input->post('card'));
 				$user->setEmail($this->input->post('email'));
 				$user->setPassword($this->input->post('password'));
-				$this->user->create($user);
+				if (!$this->user->create($user)) {
+					$this->db->trans_rollback();
+				}
 				// store token and send email
-				$this->load->database();
 				$last_id = $this->db->insert_id();
-				$random = $this->encryption->create_key(20);
+				$random = $this->__generateToken();
 				$activation = new Activation();
 				$activation->setAccountId($last_id);
 				$activation->setToken($random);
-				$this->activation->create($activation);
+				if (!$this->activation->create($activation)) {
+					$this->db->trans_rollback();
+				}
+				$this->db->trans_commit();
 				// Send email
 				$token = $random . $last_id;
-				$this->__sendMail($user->getEmail(),$token);
+				$this->__sendMail($user, $token);
 				$this->session->set_flashdata('message','Registration Successful');
 				return redirect('/account/login/');
 			}
@@ -152,20 +158,52 @@ class Account extends CI_Controller {
 
 	public function activate($token)
 	{
-		if (!$token || count($token) > 21) {
+		if (strlen($token) < 21) {
 			return redirect('/');
 		}
-		$this->load->library('encryption');
-		var_dump($this->encryption->encrypt('somemail@mail.me'));
-
+		$token_string = substr($token,0,20);
+		$id = str_replace($token_string,'',$token);
+		if (!ctype_digit($id)) {
+			return redirect('/');
+		}
+		$this->load->model(['activation','user']);
+		$activation = $this->activation->get($id,$token);
+		if (!$activation) {
+			return redirect('/');
+		}
+		$this->activation->delete();
+		// Activate user in User table
+		$this->user->activate($id);
+		$this->session->set_flashdata('message','Activation successful.
+		 Login below');
+		return redirect('/account/login');
 	}
 
-	private function __sendMail($email,$token) {
+	private function __sendMail($user, $token) {
 		$this->load->library('email');
+		$link = site_url('/activate/'.$token.'/');
 		$this->email->from('carphex@gmail.com', 'Carphex');
-		$this->email->to('phexcom022@gmail.com');
+		$this->email->to($user->getEmail());
 		$this->email->subject('Email Test');
-		$this->email->message('Testing the email class.');
+		$this->email->message('Testing the email class.'.$link);
 		$this->email->send();
 	}
+
+	private function __generateToken($length = 20) {
+		$keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$str = '';
+		$max = mb_strlen($keyspace, '8bit') - 1;
+		for ($i = 0; $i < $length; ++$i) {
+			$str .= $keyspace[random_int(0, $max)];
+		}
+		return $str;
+	}
+
+	/*public function try() {
+		$this->load->model('user');
+		$user = new User();
+		$user->email = "";
+		$this->__sendMail($user,'sevdbfnktbrdvesgcfaegse46br');
+	}*/
+
 }
