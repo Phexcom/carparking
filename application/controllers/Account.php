@@ -193,7 +193,7 @@ class Account extends CI_Controller
 									return $price + $tax;
 								}
 							}
-							throw new Exception("Invalid location id submitted!");
+							throw new Exception("Location id invalid!");
 						}) ($park->getLocationId(),$park->getNoHour())
 					);
 					if (!$this->payment->create($payment)) {
