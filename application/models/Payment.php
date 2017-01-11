@@ -28,7 +28,7 @@ class Payment extends CI_Model
     {
     	$this->id = $id;
     }
-     public function setParkingId()
+     public function setParkingId($parking_id)
     {
     	$this->parking_id = $parking_id;
     }
@@ -37,9 +37,8 @@ class Payment extends CI_Model
     	$this->amount = $amount;
     }
 
-
-    public function create(Payment $car) {
-
+    public function create(Payment $payment) {
+        return $this->db->insert('payment', $payment);
     }
 
 	public function getAll() {
