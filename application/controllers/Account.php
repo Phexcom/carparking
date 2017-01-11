@@ -31,7 +31,7 @@ class Account extends CI_Controller
             'email' => $this->session->userdata('email'),
             'address' => $this->session->userdata('billing_address'),
             'cars' => $cars,
-            'parkings'  => $parkings,
+            'parkings'  => $parking,
         ]);
         $this->load->view('layout/footer');
     }

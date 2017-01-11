@@ -129,8 +129,8 @@
         <li class="media list-group-item p-a">
           <div class="media-body">
             <div class="media-heading">
-              <small class="pull-right text-muted"><strong>No Of Hours: <?= $parking->getNoHour(); ?></strong></small>
-              <p><strong>Car Registration Number: </strong><?= $parking->getRegNum(); ?></p>
+              <small class="pull-right text-muted"><strong>No Of Hours: <?= $parking->no_hour; ?></strong></small>
+              <p><strong>Car Registration Number: </strong><?= $parking->reg_id; ?></p>
             </div>
 
             <p>
