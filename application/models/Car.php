@@ -64,6 +64,23 @@ class Car extends CI_Model
 	    return $result_array;
     }
 
+    public function getUserParkedCars($user_id)
+    {
+        $this->db->select(
+            'car.reg_id, parking.date_time, parking.no_hour,'.
+            'location.name, payment.amount'
+        );
+        $this->db->from('car');
+        $this->db->where('car.owner', $user_id);
+        $this->db->where('parking.is_parked', 1);
+        $this->db->join('parking', 'parking.reg_num = car.reg_id');
+        $this->db->join('payment', 'payment.parking_id = parking.id');
+        $this->db->join('location', 'parking.location_id = location.id');
+        $parkings = $this->db->get();
+
+        return $parkings->result();
+    }
+
     public function get($reg_id) {
         $this->db->where('reg_id', $reg_id);
         $car = $this->db->get('car');
