@@ -59,7 +59,7 @@ class Parking extends CI_Model
 
     public function setIsParked($is_parked)
     {
-    	 $this->is_parked = $is_parked;
+    	    $this->is_parked = $is_parked;
     }
     public function setNoHour($no_hour)
     {
@@ -101,7 +101,7 @@ class Parking extends CI_Model
     }
 
      public function loadObject(array $result) {
-        $park = new Park();
+        $park = new Parking();
         $park->setRegNum($result['reg_num']);
         $park->setDateTime($result['date_time']);
         $park->setLocationId($result['location_id']);

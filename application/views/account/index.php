@@ -1,3 +1,4 @@
+<br>
 <div class="container">
 <?php if ($this->session->flashdata('message')): ?>
     <div class="alert alert-success alert-dismissible hidden-xs center">
@@ -124,12 +125,12 @@
           <a href="parkcar" type="button" class="btn btn-primary-outline btn-block btn-lg">Park A Car</a>
         </li>
 
-      
+      <?php foreach ($parkings as $parking): ?>
         <li class="media list-group-item p-a">
           <div class="media-body">
             <div class="media-heading">
-              <small class="pull-right text-muted">34 min</small>
-              <h5>Mark Otto</h5>
+              <small class="pull-right text-muted"><strong>No Of Hours: <?= $parking->getNoHour(); ?></strong></small>
+              <p><strong>Car Registration Number: </strong><?= $parking->getRegNum(); ?></p>
             </div>
 
             <p>
@@ -138,6 +139,7 @@
 
           </div>
         </li>
+        <?php endforeach; ?> 
       </ul>
     </div>
     <div class="col-md-3">

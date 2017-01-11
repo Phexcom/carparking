@@ -61,7 +61,7 @@ class Payment extends CI_Model
     }
 
      public function loadObject(array $result) {
-        $pay = new Park();
+        $pay = new Payment();
         $pay->setId($result['id']);
         $pay->setParkingId($result['parking_id']);
         $pay->setAmount($result['amount']);

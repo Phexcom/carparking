@@ -12,8 +12,12 @@ class Account extends CI_Controller
             return redirect('/account');
         }
 
-        $this->load->model('car');
+       $this->load->model(
+			['parking', 'car', 'location','payment']
+		);
         $cars = $this->car->getAllByUserId($this->session->userdata('id'));
+        $parkings = $this->parking->getAll();
+        $payments = $this->payment->getAll();
 
         $this->load->view(
             'layout/header',
@@ -23,7 +27,10 @@ class Account extends CI_Controller
             'name' => $this->session->userdata('name'),
             'email' => $this->session->userdata('email'),
             'address' => $this->session->userdata('billing_address'),
-            'cars' => $cars
+            'cars' => $cars,
+            'parkings' 	=> $parkings,
+			'payments'	=> $payments
+
 
             ]);
         $this->load->view('layout/footer');
@@ -120,6 +127,7 @@ class Account extends CI_Controller
         }
         $locations = $this->location->getAll();
 
+
         /* Field validations */
 		// Get all user's cars reg number as array
 		$car_array = [];
@@ -173,6 +181,7 @@ class Account extends CI_Controller
                 $park->setLocationId($this->input->post('location'));
                 $park->setNoHour($this->input->post('no_hour'));
 				$park->setDateTime(date("Y-m-d H:i:s"));
+
 				// If save is not successful, roll-back transaction
 				if (!$this->parking->create($park)) {
 					$this->db->trans_rollback();
@@ -219,11 +228,12 @@ class Account extends CI_Controller
 			'account/parkcar', 
 			[
 				'locations' => $locations, 
-				'cars' => $cars
+				'cars' 		=> $cars
 			]
 		);
         $this->load->view('layout/footer');
     }
+
 
     //Handling User Login
     public function login()
@@ -263,7 +273,7 @@ class Account extends CI_Controller
                             [
                                 'id'                => $user->getId(),
                                 'name'              => $user->getName(),
-                                'email'                 => $user->getEmail(),
+                                'email'             => $user->getEmail(),
                                 'billing_address'   => $user->getBillingAddress(),
                                 'is_admin'          => $user->getIsAdmin()
                             ]
