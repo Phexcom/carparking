@@ -75,8 +75,10 @@ class Parking extends CI_Model
     	 $this->checkout = $checkout;
     }
 
-    public function create(Parking $car) {
-
+    public function create(Parking $parking) {
+        unset($parking->is_parked);
+        unset($parking->checkout);
+        return $this->db->insert('parking', $parking);
     }
 
 	public function getAll() {

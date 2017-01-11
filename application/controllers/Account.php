@@ -109,56 +109,119 @@ class Account extends CI_Controller
 
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $this->load->model(['parking', 'car', 'location']);
+        $this->load->model(
+			['parking', 'car', 'location','payment']
+		);
 
         $cars = $this->car->getAllByUserId($this->session->userdata('id'));
         if (empty($cars)) {
-            $this->session->set_flashdata('message', 'You do not have any car registered');
+            $this->session->set_flashdata('message', 'You do not have any car added!');
             return redirect('/account');
         }
         $locations = $this->location->getAll();
 
-        // Field validations
+        /* Field validations */
+		// Get all user's cars reg number as array
+		$car_array = [];
+		foreach ($cars as $car) {
+			$car_array[] = $car->getRegId();
+		}
         $this->form_validation->set_rules(
             'reg_num',
             'Registration Number',
-            ['trim','required','in_list[$cars]']
+            ['trim','required','in_list['.implode(',',$car_array).']'],
+			[
+				"required" => "You must select a car.",
+				"in_list" => "You can only park your registered cars"
+			]
         );
 
+		// Get all location id as array
+		$location_array = [];
+		foreach ($locations as $location) {
+			$location_array[] = $location->getId();
+		}
         $this->form_validation->set_rules(
-            'locate',
+            'location',
             'Location',
-            ['trim','required' ,'in_list[$locations]']
+            ['trim','required','in_list['.implode(',',$location_array).']'],
+			[
+				"required" 	=> "You must select a location",
+				"in_list"	=> "You can only select one of the locations above"
+			]
         );
 
         $this->form_validation->set_rules(
             'no_hour',
             'No of Hours',
-            ['trim','required', 'is_natural_no_zero']
+            ['trim','required', 'is_natural_no_zero'],
+			[
+				"is_natural_no_zero" => 
+					"parking hours can only be postive integers, starting from one",
+				"required" => "You must supply the number of hours"
+			]
         );
 
         if ($this->input->method(true) === "POST") {
-            if ($this->form_validation->run() == true) {
-                $park = new Car();
+            if ($this->form_validation->run()) {
+				// load database, start transaction
+				$this->load->database();
+				$this->db->trans_begin();
+				// Create new Park Object
+                $park = new Parking();
                 $park->setRegNum($this->input->post('reg_num'));
-                $park->setLocationId($this->input->post('locate'));
+                $park->setLocationId($this->input->post('location'));
                 $park->setNoHour($this->input->post('no_hour'));
-                if ($this->park->create($park)) {
-                    $this->session->set_flashdata('message', 'Car Parked successfully');
-                    return redirect('/account/');
-                } else {
-                    $this->session->set_flashdata('message', 'Car could not be Parked. Try again!');
-                }
+				$park->setDateTime(date("Y-m-d H:i:s"));
+				// If save is not successful, roll-back transaction
+				if (!$this->parking->create($park)) {
+					$this->db->trans_rollback();
+					$this->session->set_flashdata(
+						'error',
+						'There was a problem while processing. Please try again.'
+					);
+				} else {
+					// Create a new Payment Object
+					$payment = new Payment();
+					$payment->setParkingId($this->db->insert_id());
+					$payment->setAmount(
+						(function($location_id, $hours) use ($locations) {
+							foreach ($locations as $location) {
+								if ($location->getId() == $location_id) {
+									$tax = $location->getVat() * $hours;
+									$price = $location->getPrice() * $hours;
+									return $price + $tax;
+								}
+							}
+							throw new Exception("Invalid location id submitted!");
+						}) ($park->getLocationId(),$park->getNoHour())
+					);
+					if (!$this->payment->create($payment)) {
+						$this->db->trans_rollback();
+						$this->session->set_flashdata(
+							'error',
+							'There was a problem while processing. Please try again.'
+						);
+					} else {
+						$this->db->trans_commit();
+						$this->session->set_flashdata('message', 'Car Parked successfully');
+                    	return redirect('/account/');
+					}
+				}
             }
         }
-
-
 
         $this->load->view(
             'layout/header',
             ['title' => "Car Park | Park Car"]
         );
-        $this->load->view('account/parkcar', ['locations' => $locations, 'cars' => $cars]);
+        $this->load->view(
+			'account/parkcar', 
+			[
+				'locations' => $locations, 
+				'cars' => $cars
+			]
+		);
         $this->load->view('layout/footer');
     }
 
@@ -351,7 +414,7 @@ class Account extends CI_Controller
 		 Login below');
         return redirect('/account/login');
     }
-	
+
     //Sending Activation Email
     private function __sendMail($user, $token)
     {
