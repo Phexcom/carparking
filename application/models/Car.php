@@ -3,15 +3,15 @@
 class Car extends CI_Model
 {
 
-	protected $reg_id;
+	public $reg_id;
 
-    protected $color;
+    public $color;
 
-    protected $make;
+    public $make;
 
-    protected $brand;
+    public $brand;
 
-    protected $owner;
+    public $owner;
 
     public function __construct() {
         parent::__construct();
@@ -51,10 +51,11 @@ class Car extends CI_Model
     }
 
     public function create(Car $car) {
-
+        return $this->db->insert('car', $car);
     }
 
-	public function getAll() {
+	public function getAllByUserId($id) {
+        $this->db->where('owner', $id);
 	    $car = $this->db->get('car');
 	    $result_array = [];
 	    foreach ($car->result_array() as $row ) {

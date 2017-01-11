@@ -31,7 +31,7 @@
 
 
 <div class="form-group input-group-lg">
-    <input  class="btn btn-danger"  type="submit" value="Login">   
+    <input  class="btn btn-danger-outline btn-lg"  type="submit" value="Login">   
 </div>
 
     

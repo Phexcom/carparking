@@ -2,13 +2,13 @@
 
 class Parking extends CI_Model
 {
-	protected $reg_num;
-	protected $date_time;
-	protected $location_id;
-	protected $is_parked;
-	protected $no_hour;
-	protected $id;
-	protected $checkout;
+	public $reg_num;
+	public $date_time;
+	public $location_id;
+	public $is_parked;
+	public $no_hour;
+	public $id;
+	public $checkout;
 
 	public function __construct() {
         parent::__construct();

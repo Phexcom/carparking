@@ -2,15 +2,15 @@
 
 class Location extends CI_Model
 {
-    protected $id;
+    public $id;
 
-    protected $code;
+    public $code;
 
-    protected $name;
+    public $name;
 
-    protected $price;
+    public $price;
 
-    protected $vat;
+    public $vat;
 
     public function __construct() {
         parent::__construct();

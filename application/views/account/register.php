@@ -41,7 +41,7 @@
 </div>
 
 <div class="form-group input-group-lg">
-    <input  class="btn btn-danger"  type="submit" value="Register">   
+    <input  class="btn btn-danger-outline btn-lg"  type="submit" value="Register">   
 </div>
 
     

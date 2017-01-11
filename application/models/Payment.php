@@ -2,9 +2,9 @@
 
 class Payment extends CI_Model
 {
-	protected $id;
-	protected $parking_id;
-	protected $amount;
+	public $id;
+	public $parking_id;
+	public $amount;
 
 	public function __construct() {
         parent::__construct();

@@ -3,6 +3,6 @@
 !*/logs/index.html
 */cache/*
 !*/cache/index.html
-.DS_Store
+*.DS_Store
 application/config/email.php
 

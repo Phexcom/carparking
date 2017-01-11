@@ -1,4 +1,10 @@
-
+<div class="container">
+<?php if ($this->session->flashdata('message')): ?>
+    <div class="alert alert-success alert-dismissible hidden-xs center">
+       <strong><?=$this->session->flashdata('message')?></strong>
+    </div>
+<?php endif; ?>
+</div>
 
 <nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
   <div class="container">
@@ -29,7 +35,7 @@
           </li>
           <li>
             <button class="btn btn-default navbar-btn navbar-btn-avitar" data-toggle="popover">
-              <img class="img-circle" src="images/profile.jpg">
+              <img class="img-circle" src="/images/profile.jpg">
             </button>
           </li>
         </ul>
@@ -58,16 +64,16 @@
   <div class="row">
     <div class="col-md-3">
       <div class="panel panel-default panel-profile m-b-md">
-        <div class="panel-heading" style="background-image: url(images/car.jpg);"></div>
+        <div class="panel-heading" style="background-image: url(/images/car.jpg);"></div>
         <div class="panel-body text-center">
           <a href="profile/index.html">
             <img
               class="panel-profile-img"
-              src="images/profile.jpg">
+              src="/images/profile.jpg">
           </a>
 
           <h5 class="panel-title">
-            <a class="text-inherit" href="profile/index.html">Dave Gamache</a>
+            <a class="text-inherit" href="#"><?php echo $name; ?></a>
           </h5>
 
           <p class="m-b-md">I wish i was a little bit taller, wish i was a baller, wish i had a girl… also.</p>
@@ -75,8 +81,8 @@
           <ul class="panel-menu">
             <li class="panel-menu-item">
               <a href="#userModal" class="text-inherit" data-toggle="modal">
-                Parked Cars
-                <h5 class="m-y-0">12M</h5>
+                Amount Owe
+                <h5 class="m-y-0">AED 12</h5>
               </a>
             </li>
 
@@ -94,19 +100,28 @@
         <div class="panel-body">
           <h5 class="m-t-0">About <small>· <a href="#">Edit</a></small></h5>
           <ul class="list-unstyled list-spaced">
-            <li><span class="text-muted icon icon-calendar m-r"></span>Name <a href="#">Oh, Canada</a>
-            <li><span class="text-muted icon icon-users m-r"></span>Email <a href="#">Obama</a>
-            <li><span class="text-muted icon icon-location-pin m-r"></span>Lives in <a href="#">Seattle, WA</a>
+            <li><span class="text-muted icon icon-calendar m-r"></span>Name: <a href="#"><?php echo $name; ?></a>
+            <li><span class="text-muted icon icon-users m-r"></span>Email: <a href="#"><?php echo $email; ?></a>
+            <li><span class="text-muted icon icon-location-pin m-r"></span>Lives in <a href="#"><?php echo $address; ?></a>
           </ul>
         </div>
       </div>
+
+      <div class="panel panel-default m-b-md hidden-xs">
+        <div class="panel-body">
+          <h5 class="m-t-0">Edit Credit Cards</h5>
+          <p><strong>It might be time to visit Iceland.</strong> Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?</p>
+          <button class="btn btn-primary-outline btn-sm">Manage Credit Cards</button>
+        </div>
+      </div>
+
     </div>
 
     <div class="col-md-6">
       <ul class="list-group media-list media-list-stream">
 
         <li class="media list-group-item p-a">
-          <a type="button" class="btn btn-info-outline btn-block btn-lg" data-toggle="modal" data-target="#car">Park A Car</a>
+          <a href="parkcar" type="button" class="btn btn-primary-outline btn-block btn-lg">Park A Car</a>
         </li>
 
       
@@ -130,14 +145,35 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         Counter When PArked
       </div>
-      
-     <div class="panel panel-default m-b-md hidden-xs">
+
+       <div class="panel panel-default m-b-md hidden-xs">
         <div class="panel-body">
-          <h5 class="m-t-0">Manage Credit Cards</h5>
-          <p><strong>It might be time to visit Iceland.</strong> Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?</p>
-          <button class="btn btn-primary-outline btn-sm">Manage Credit Cards</button>
+          <h4 class="m-t-0">Manage Cars</h4>
+          <a href="addcar" class="btn btn-primary-outline btn-sm">Add a new Car</a>
+          <?php foreach ($cars as $car): ?>
+          <hr>
+          <ul style="list-style-type:none;">
+            <li>
+              <strong>Car Registration No: </strong><?= $car->getRegId()?>
+            </li>
+            <li>
+              <strong>Car Color: </strong><?= $car->getColor()?>
+            </li>
+            <li>
+              <strong>Car Brand: </strong><?= $car->getBrand()?>
+            </li>
+            <li>
+              <strong>Car Make: </strong><?= $car->getMake()?>
+            </li>
+          </ul>
+          <button class="btn btn-warning-outline btn-sm">Edit Car</button>
+          <button class="btn btn-danger-outline btn-sm">Delete Car</button>
+          <!-- <hr> -->
+          <?php endforeach; ?> 
         </div>
       </div>
+
+     
    
     </div>
   </div>

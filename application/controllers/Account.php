@@ -4,16 +4,179 @@ class Account extends CI_Controller {
 
     public function index()
 	{
+		if(!$this->session->has_userdata('id')){
+
+			return redirect('/account/login');
+		}
+		if($this->session->is_admin){
+
+			return redirect('/account');
+		}
+
+		$this->load->model('car');
+		$cars = $this->car->getAllByUserId($this->session->userdata('id'));
+
 		$this->load->view(
 			'layout/header', 
 			['title' => "Car Park"]
 		);
-		$this->load->view('account/index');
+		$this->load->view('account/index', [
+			'name' => $this->session->userdata('name'),
+			'email' => $this->session->userdata('email'),
+			'address' => $this->session->userdata('billing_address'),
+			'cars' => $cars
+
+			]);
 		$this->load->view('layout/footer');
 	}
+	//Parking a  Car
+	public function addcar()
+	{
+		if(!$this->session->has_userdata('id')){
+
+			return redirect('/account/login');
+		}
+		if($this->session->is_admin){
+
+			return redirect('/account/');
+		}
+
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->load->model('car');
+		
+
+		// validation rules
+		$this->form_validation->set_rules(
+			'reg_id', 
+			'Registration Id',
+			['trim','required','max_length[11]','is_unique[car.reg_id]'],
+			['is_unique' => "Vehicle is already registered."]
+		);
+
+		$this->form_validation->set_rules(
+			'color', 
+			'Car color',
+			['trim','required', 'max_length[20]']
+		);
+		$this->form_validation->set_rules(
+			'make', 
+			'Car make',
+			['trim','required', 'max_length[50]']
+		);
+
+		$this->form_validation->set_rules(
+			'brand', 
+			'Car Brand',
+			['trim','required', 'max_length[50]']
+		);
+
+
+		if ($this->input->method(TRUE) === "POST") {
+			if ($this->form_validation->run() == TRUE) {
+				$car = new Car();
+				$car->setRegId($this->input->post('reg_id'));
+				$car->setColor($this->input->post('color'));
+				$car->setMake($this->input->post('make'));
+				$car->setBrand($this->input->post('brand'));
+				$car->setOwner($this->session->id);
+				if($this->car->create($car)){
+					$this->session->set_flashdata('message','Car add successfully');
+					return redirect('/account/');
+				}else{$this->session->set_flashdata('message','Car could not be added. Try again!');}
+
+
+			}
+	}
+
+		$this->load->view(
+			'layout/header', 
+			['title' => "Car Park | Add Car"]
+		);
+		$this->load->view('account/addcar');
+		$this->load->view('layout/footer');
+	}
+
+	//Park Car
+
+	public function parkcar()
+	{
+		if(!$this->session->has_userdata('id')){
+
+			return redirect('/account/login');
+		}
+		if($this->session->is_admin){
+
+			return redirect('/account/');
+		}
+
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->load->model(['parking', 'car', 'location']);
+
+		$cars = $this->car->getAllByUserId($this->session->userdata('id'));
+		if(empty($cars)){
+			$this->session->set_flashdata('message','You do not have any car registered');
+			return redirect('/account');
+		}
+		$locations = $this->location->getAll();
+
+		
+
+		$this->form_validation->set_rules(
+			'reg_num', 
+			'Registration Number',
+			['trim','required','in_list[$cars]']
+		);
+
+		$this->form_validation->set_rules(
+			'locate', 
+			'Location',
+			['trim','required' ,'in_list[$locations]']
+		);
+
+		$this->form_validation->set_rules(
+			'no_hour', 
+			'No of Hours',
+			['trim','required', 'is_natural_no_zero']
+		);
+
+		if ($this->input->method(TRUE) === "POST") {
+		if ($this->form_validation->run() == TRUE) {
+			$park = new Car();
+			$park->setRegNum($this->input->post('reg_num'));
+			$park->setLocationId($this->input->post('locate'));
+			$park->setNoHour($this->input->post('no_hour'));
+			if($this->park->create($park)){
+				$this->session->set_flashdata('message','Car Parked successfully');
+				return redirect('/account/');
+			}else{$this->session->set_flashdata('message','Car could not be Parked. Try again!');}
+
+
+		}
+	}
+
+
+
+		$this->load->view(
+			'layout/header', 
+			['title' => "Car Park | Park Car"]
+		);
+		$this->load->view('account/parkcar', ['locations' => $locations, 'cars' => $cars]);
+		$this->load->view('layout/footer');
+
+	}
+
 	//Handling User Login
 	public function login()
 	{
+
+		if($this->session->has_userdata('id')){
+
+			return redirect('/account');
+		}
+
+
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->load->model('user');
@@ -43,10 +206,11 @@ class Account extends CI_Controller {
 					if ($user->getIsActivated()) {
 						$this->session->set_userdata(
 							[
-								'id' 		=> $user->getId(),
-								'name'		=> $user->getName(),
-								'email'		=> $user->getEmail(),
-								'is_admin'	=> $user->getIsAdmin()
+								'id' 				=> $user->getId(),
+								'name'				=> $user->getName(),
+								'email'				=> $user->getEmail(),
+								'billing_address'	=> $user->getBillingAddress(),
+								'is_admin'			=> $user->getIsAdmin()
 							]
 						);
 						return redirect('/account/');	
@@ -59,12 +223,17 @@ class Account extends CI_Controller {
 			}
 		}
 		$this->load->view('layout/header',['title' => "Car Park | Login"]);
-		$this->load->view('account/login',$data);
+		$this->load->view('account/login');
 		$this->load->view('layout/footer');
 	}
 	//Handling User registeration
 	public function register()
 	{
+		if($this->session->has_userdata('id')){
+
+			return redirect('/account');
+		}
+
 		$this->load->helper('form');
 		$this->load->library(['form_validation']);
 		$this->load->model(['user','activation']);
@@ -78,7 +247,7 @@ class Account extends CI_Controller {
 		$this->form_validation->set_rules(
 			'address',
 			'Billing address',
-			['trim','required']
+			['trim','required', 'max_length[250]']
 		);
 		$this->form_validation->set_rules(
 			'card',
@@ -112,7 +281,7 @@ class Account extends CI_Controller {
 		$this->form_validation->set_rules(
 			'email',
 			'Email',
-			['trim','required','valid_email','is_unique[user.email]'],
+			['trim','required','valid_email', 'max_length[100]','is_unique[user.email]'],
 			['is_unique' => "Email address is already registered."]
 		);
 		$this->form_validation->set_rules(
@@ -208,12 +377,5 @@ class Account extends CI_Controller {
 		}
 		return $str;
 	}
-
-	/*public function try() {
-		$this->load->model('user');
-		$user = new User();
-		$user->email = "";
-		$this->__sendMail($user,'sevdbfnktbrdvesgcfaegse46br');
-	}*/
 
 }
