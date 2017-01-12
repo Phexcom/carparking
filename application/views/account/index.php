@@ -99,7 +99,7 @@
 
       <div class="panel panel-default visible-md-block visible-lg-block">
         <div class="panel-body">
-          <h5 class="m-t-0">About <small>· <a href="#">Edit</a></small></h5>
+          <h5 class="m-t-0">About <small>· <a href="/account/edituser">Edit</a></small></h5>
           <ul class="list-unstyled list-spaced">
             <li><span class="text-muted icon icon-calendar m-r"></span>Name: <a href="#"><?php echo $name; ?></a>
             <li><span class="text-muted icon icon-users m-r"></span>Email: <a href="#"><?php echo $email; ?></a>
@@ -177,8 +177,8 @@
               <strong>Car Make: </strong><?= $car->getMake()?>
             </li>
           </ul>
-          <button class="btn btn-warning-outline btn-sm">Edit Car</button>
-          <button class="btn btn-danger-outline btn-sm">Delete Car</button>
+          <a href="/account/editcar" class="btn btn-warning-outline btn-sm">Edit Car</a>
+          <a class="btn btn-danger-outline btn-sm">Delete Car</a>
           <!-- <hr> -->
           <?php endforeach; ?> 
         </div>

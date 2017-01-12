@@ -107,6 +107,77 @@ class Account extends CI_Controller
         $this->load->view('layout/footer');
     }
 
+    //Edit Cars
+
+    public function editcar()
+    {
+        if ($this->session->is_admin) {
+            return redirect('/account/');
+        }
+
+        if (!$this->session->has_userdata('id')) {
+            return redirect('/account/login');
+        }
+        
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->load->model('car');
+        
+        // validation rules
+        $this->form_validation->set_rules(
+            'reg_id',
+            'Registration Id',
+            ['trim','required','max_length[11]','is_unique[car.reg_id]'],
+            ['is_unique' => "Vehicle is already registered."]
+        );
+
+        $this->form_validation->set_rules(
+            'color',
+            'Car color',
+            ['trim','required', 'max_length[20]']
+        );
+
+        $this->form_validation->set_rules(
+            'make',
+            'Car make',
+            ['trim','required','max_length[50]']
+        );
+
+        $this->form_validation->set_rules(
+            'brand',
+            'Car Brand',
+            ['trim','required', 'max_length[50]']
+        );
+
+        if ($this->input->method(true) === "POST") {
+            if ($this->form_validation->run() == true) {
+                $car = new Car();
+                $car->setRegId($this->input->post('reg_id'));
+                $car->setColor($this->input->post('color'));
+                $car->setMake($this->input->post('make'));
+                $car->setBrand($this->input->post('brand'));
+                $car->setOwner($this->session->id);
+                if ($this->car->create($car)) {
+                    $this->session->set_flashdata(
+                        'message', 'Car added successfully!'
+                    );
+                    return redirect('/account/');
+                } else {
+                    $this->session->set_flashdata(
+                        'message', 'Car could not be added. Try again!'
+                    );
+                }
+            }
+        }
+
+        $this->load->view(
+            'layout/header',
+            ['title' => "Car Park | Edit Car"]
+        );
+        $this->load->view('account/editcar');
+        $this->load->view('layout/footer');
+    }
+
     public function parkcar()
     {
         if ($this->session->is_admin) {
@@ -417,6 +488,61 @@ class Account extends CI_Controller
         $this->load->view('account/register');
         $this->load->view('layout/footer');
     }
+
+    //Handling Edit user
+    public function edituser()
+    {
+         if ($this->session->is_admin) {
+            return redirect('/account/');
+        }
+
+        if (!$this->session->has_userdata('id')) {
+            return redirect('/account/login');
+        }
+
+        
+        $this->load->helper('form');
+        $this->load->library(['form_validation']);
+        $this->load->model(['user','activation']);
+
+        // validation rules
+        $this->form_validation->set_rules(
+            'name',
+            'Full Name',
+            ['trim','required','max_lenght[100]']
+        );
+
+        $this->form_validation->set_rules(
+            'address',
+            'Billing address',
+            ['trim','required', 'max_length[250]']
+        );
+
+
+        $this->form_validation->set_rules(
+            'email',
+            'Email',
+            ['trim','required','valid_email', 'max_length[100]','is_unique[user.email]'],
+            ['is_unique' => "Email address is already registered."]
+        );
+
+        $this->form_validation->set_rules(
+            'password',
+            'password',
+            ['trim','required','min_length[8]']
+        );
+
+        $this->form_validation->set_rules(
+            'password_confirm',
+            'password confirmation',
+            ['trim','matches[password]']
+        );
+
+        $this->load->view('layout/header', ['title' => "Car Park | Edit User"]);
+        $this->load->view('account/edituser');
+        $this->load->view('layout/footer');
+    }
+
 
     public function logout()
     {
