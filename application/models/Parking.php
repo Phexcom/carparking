@@ -100,9 +100,11 @@ class Parking extends CI_Model
         return $this->loadObject($park->row_array());
     }
 
-    public function checkout($regnum)
+    public function checkout($id)
     {
-
+        $this->db->where('id', $id);
+        $this->db->set('is_parked', 0);
+        $this->db->update('parking');
     }
 
     public function loadObject(array $result)

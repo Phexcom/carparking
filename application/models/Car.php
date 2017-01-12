@@ -64,11 +64,24 @@ class Car extends CI_Model
 	    return $result_array;
     }
 
+    // public function getAllUserUnpacked($id) {
+    //     $this->db->select('car.*');
+    //     $this->db->where('owner', $id);
+    //     $this->db->where('is_parked', 0);
+    //     $this->db->join('parking', 'parking.reg_num = car.reg_id', 'left');
+    //     $car = $this->db->get('car');
+    //     $result_array = [];
+    //     foreach ($car->result_array() as $row ) {
+    //         $result_array[] = $this->loadObject($row);
+    //     }
+    //     return $result_array;
+    // }
+
     public function getUserParkedCars($user_id)
     {
         $this->db->select(
             'car.reg_id, parking.date_time, parking.no_hour,'.
-            'location.name, payment.amount'
+            'location.name, payment.amount, parking.id'
         );
         $this->db->from('car');
         $this->db->where('car.owner', $user_id);

@@ -21,6 +21,8 @@ class Account extends CI_Controller
         $parking = $this->car->getUserParkedCars(
             $this->session->userdata('id')
         );
+        // echo "<pre>";
+        // var_dump($parking);die();
         
         $this->load->view(
             'layout/header',
@@ -120,9 +122,11 @@ class Account extends CI_Controller
             ['parking', 'car', 'location','payment']
         );
 
-        $cars = $this->car->getAllByUserId($this->session->userdata('id'));
+
+
+        $cars = $this->car->getUserParkedCars($this->session->userdata('id'));
         if (empty($cars)) {
-            $this->session->set_flashdata('message', 'You do not have any car added!');
+            $this->session->set_flashdata('message', "It's either you dont have a car or all your cars are parked.");
             return redirect('/account');
         }
         $locations = $this->location->getAll();
@@ -232,6 +236,13 @@ class Account extends CI_Controller
             ]
         );
         $this->load->view('layout/footer');
+    }
+
+    //unparkcar
+    public function unpark($id)
+    {
+        $park = new Parking();
+        $this->park->checkout($id);
     }
 
     //Handling User Login

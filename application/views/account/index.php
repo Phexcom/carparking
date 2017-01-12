@@ -49,11 +49,11 @@
 
         <ul class="nav navbar-nav hidden-sm hidden-md hidden-lg">
           <li><a href="#">Home</a></li>
-          <li><a href="#">Logout</a></li>
+          <li><a href="/account/logout">Logout</a></li>
         </ul>
 
         <ul class="nav navbar-nav hidden">
-          <li><a href="#">Logout</a></li>
+          <li><a href="/account/logout">Logout</a></li>
         </ul>
       </div>
   </div>
@@ -122,7 +122,10 @@
       <ul class="list-group media-list media-list-stream">
 
         <li class="media list-group-item p-a">
-          <a href="parkcar" type="button" class="btn btn-primary-outline btn-block btn-lg">Park A Car</a>
+          <a href="/account/parkcar" type="button" class="btn btn-primary-outline btn-block btn-lg">Park A Car</a>
+        </li>
+        <li class="media list-group-item p-a">
+          <h3 class="center">Parked Cars</h3>
         </li>
 
       <?php foreach ($parkings as $parking): ?>
@@ -134,9 +137,15 @@
             </div>
 
             <p>
-              Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                <strong>Time Car was Parked: </strong><?= $parking->date_time; ?>
             </p>
-
+            <p>
+                <strong>Parking Location: </strong><?= $parking->name; ?>
+            </p>
+            <p>
+                <strong>Parking Cost: </strong><?= $parking->amount; ?>
+            </p>
+               <button class="btn btn-danger-outline btn-sm">Unpark this car</button>
           </div>
         </li>
         <?php endforeach; ?> 
@@ -151,7 +160,7 @@
        <div class="panel panel-default m-b-md hidden-xs">
         <div class="panel-body">
           <h4 class="m-t-0">Manage Cars</h4>
-          <a href="addcar" class="btn btn-primary-outline btn-sm">Add a new Car</a>
+          <a href="/account/addcar" class="btn btn-primary-outline btn-sm">Add a new Car</a>
           <?php foreach ($cars as $car): ?>
           <hr>
           <ul style="list-style-type:none;">
