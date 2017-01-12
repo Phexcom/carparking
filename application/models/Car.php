@@ -64,19 +64,6 @@ class Car extends CI_Model
 	    return $result_array;
     }
 
-    // public function getAllUserUnpacked($id) {
-    //     $this->db->select('car.*');
-    //     $this->db->where('owner', $id);
-    //     $this->db->where('is_parked', 0);
-    //     $this->db->join('parking', 'parking.reg_num = car.reg_id', 'left');
-    //     $car = $this->db->get('car');
-    //     $result_array = [];
-    //     foreach ($car->result_array() as $row ) {
-    //         $result_array[] = $this->loadObject($row);
-    //     }
-    //     return $result_array;
-    // }
-
     public function getUserParkedCars($user_id)
     {
         $this->db->select(
@@ -97,11 +84,16 @@ class Car extends CI_Model
     public function get($reg_id) {
         $this->db->where('reg_id', $reg_id);
         $car = $this->db->get('car');
+        if (!$car->row_array()) {
+            return false;
+        }
         return $this->loadObject($car->row_array());
     }
 
     public function update(Car $car) {
-
+        $reg_id = $car->getRegId();
+        unset($car->reg_id);
+        return $this->db->update('car',$car,['reg_id' => $reg_id]);
     }
 
      public function loadObject(array $result) {

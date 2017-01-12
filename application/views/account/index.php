@@ -145,7 +145,10 @@
             <p>
                 <strong>Parking Cost: </strong><?= $parking->amount; ?>
             </p>
-               <button class="btn btn-danger-outline btn-sm">Unpark this car</button>
+               <a class="btn btn-danger-outline btn-sm"
+                  href="/account/unpark/<?php echo($parking->id) ;?>">
+                  Unpark this car
+               </a>
           </div>
         </li>
         <?php endforeach; ?> 
@@ -177,7 +180,7 @@
               <strong>Car Make: </strong><?= $car->getMake()?>
             </li>
           </ul>
-          <a href="/account/editcar" class="btn btn-warning-outline btn-sm">Edit Car</a>
+          <a href="/account/editcar/<?php echo($car->getRegId()); ?>" class="btn btn-warning-outline btn-sm">Edit Car</a>
           <a class="btn btn-danger-outline btn-sm">Delete Car</a>
           <!-- <hr> -->
           <?php endforeach; ?> 

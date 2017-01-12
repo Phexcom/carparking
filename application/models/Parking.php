@@ -93,6 +93,16 @@ class Parking extends CI_Model
         return $result_array;
     }
 
+    public function getById($parking_id)
+    {
+        $this->db->where('id', $parking_id);
+        $park = $this->db->get('parking');
+        if (!$park->row_array()) {
+            return false;
+        }
+        return $this->loadObject($park->row_array());
+    }
+
     public function get($reg_num)
     {
         $this->db->where('reg_num', $reg_num);
@@ -100,14 +110,16 @@ class Parking extends CI_Model
         return $this->loadObject($park->row_array());
     }
 
-    public function checkout($id)
+    public function checkout(Parking $parking)
     {
-        $this->db->where('id', $id);
+        $this->db->where('id', $parking->getId());
         $this->db->set('is_parked', 0);
+        $this->db->set('checkout', date('Y-m-d H:i:s'));
         $this->db->update('parking');
     }
 
-    public function checkParked($car_reg_num) {
+    public function checkParked($car_reg_num)
+    {
         $this->db->where('reg_num', $car_reg_num);
         $this->db->where('is_parked', 1);
         $park = $this->db->get('parking');

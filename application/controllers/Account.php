@@ -108,9 +108,9 @@ class Account extends CI_Controller
     }
 
     //Edit Cars
-
-    public function editcar()
+    public function editcar($car_id)
     {
+        $car_id = urldecode($car_id);
         if ($this->session->is_admin) {
             return redirect('/account/');
         }
@@ -122,15 +122,23 @@ class Account extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model('car');
+
+        if (!$car_id) {
+            return redirect('/account');
+        }
+
+        // Car must exist in db
+        if(!$car = $this->car->get($car_id)) {
+            $this->session->set_flashdata('message','Car does not exist.');
+            return redirect('/account');
+        }
+        // User must be editing own car
+        if ($car->getOwner() !== $this->session->id) {
+            $this->session->set_flashdata('error','Thief Ole!!!');
+            return redirect('/account');
+        }
         
         // validation rules
-        $this->form_validation->set_rules(
-            'reg_id',
-            'Registration Id',
-            ['trim','required','max_length[11]','is_unique[car.reg_id]'],
-            ['is_unique' => "Vehicle is already registered."]
-        );
-
         $this->form_validation->set_rules(
             'color',
             'Car color',
@@ -152,19 +160,19 @@ class Account extends CI_Controller
         if ($this->input->method(true) === "POST") {
             if ($this->form_validation->run() == true) {
                 $car = new Car();
-                $car->setRegId($this->input->post('reg_id'));
+                $car->setRegId($car_id);
                 $car->setColor($this->input->post('color'));
                 $car->setMake($this->input->post('make'));
                 $car->setBrand($this->input->post('brand'));
                 $car->setOwner($this->session->id);
-                if ($this->car->create($car)) {
+                if ($this->car->update($car)) {
                     $this->session->set_flashdata(
-                        'message', 'Car added successfully!'
+                        'message', 'Car updated successfully!'
                     );
                     return redirect('/account/');
                 } else {
                     $this->session->set_flashdata(
-                        'message', 'Car could not be added. Try again!'
+                        'error', 'Car could not be updated. Try again!'
                     );
                 }
             }
@@ -174,7 +182,7 @@ class Account extends CI_Controller
             'layout/header',
             ['title' => "Car Park | Edit Car"]
         );
-        $this->load->view('account/editcar');
+        $this->load->view('account/editcar',['car' => $car]);
         $this->load->view('layout/footer');
     }
 
@@ -318,10 +326,30 @@ class Account extends CI_Controller
     }
 
     //unparkcar
-    public function unpark($id)
+    public function unpark($parking_id)
     {
-        $park = new Parking();
-        $this->park->checkout($id);
+        if (!$this->session->has_userdata('id')) {
+            return redirect('/account/login');
+        }
+        if ($this->session->is_admin) {
+            return redirect('/account');
+        }
+        if (!ctype_digit($parking_id) || $parking_id < 1) {
+            return redirect('/account');
+        }
+        $this->load->model(['parking','car']);
+        if (!$park = $this->parking->getById($parking_id)) {
+            return redirect('/account');
+        }
+        // check if car belongs to requestor
+        $car = $this->car->get($park->getRegNum());
+        if ($car->getOwner() !== $this->session->id) {
+            $this->session->set_flashdata('error','Thief Ole!!!');
+            return redirect('/account');
+        }
+        $this->parking->checkout($park);
+        $this->session->set_flashdata('message','Checkout successful');
+        return redirect('/account');
     }
 
     //Handling User Login
