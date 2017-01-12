@@ -119,18 +119,15 @@ class Account extends CI_Controller
         $this->load->helper('form');
         $this->load->library('form_validation');
         $this->load->model(
-            ['parking', 'car', 'location','payment']
+            ['parking', 'car','location','payment']
         );
 
-
-
-        $cars = $this->car->getUserParkedCars($this->session->userdata('id'));
+        $cars = $this->car->getAllByUserId($this->session->userdata('id'));
         if (empty($cars)) {
             $this->session->set_flashdata('message', "It's either you dont have a car or all your cars are parked.");
             return redirect('/account');
         }
         $locations = $this->location->getAll();
-
 
         /* Field validations */
         // Get all user's cars reg number as array
@@ -176,49 +173,60 @@ class Account extends CI_Controller
 
         if ($this->input->method(true) === "POST") {
             if ($this->form_validation->run()) {
-                // load database, start transaction
-                $this->load->database();
-                $this->db->trans_begin();
-                // Create new Park Object
-                $park = new Parking();
-                $park->setRegNum($this->input->post('reg_num'));
-                $park->setLocationId($this->input->post('location'));
-                $park->setNoHour($this->input->post('no_hour'));
-                $park->setDateTime(date("Y-m-d H:i:s"));
-
-                // If save is not successful, roll-back transaction
-                if (!$this->parking->create($park)) {
-                    $this->db->trans_rollback();
+                // Check if car is not already parked
+                $car_is_parked = $this->parking->checkParked(
+                    $this->input->post('reg_num')
+                );
+                if (!empty($car_is_parked)) {
                     $this->session->set_flashdata(
                         'error',
-                        'There was a problem while processing. Please try again.'
+                        'The selected car is currently parked!'
                     );
                 } else {
-                    // Create a new Payment Object
-                    $payment = new Payment();
-                    $payment->setParkingId($this->db->insert_id());
-                    $payment->setAmount(
-                        (function ($location_id, $hours) use ($locations) {
-                            foreach ($locations as $location) {
-                                if ($location->getId() == $location_id) {
-                                    $tax = $location->getVat() * $hours;
-                                    $price = $location->getPrice() * $hours;
-                                    return $price + $tax;
-                                }
-                            }
-                            throw new Exception("Location id invalid!");
-                        }) ($park->getLocationId(),$park->getNoHour())
-                    );
-                    if (!$this->payment->create($payment)) {
+                    // load database, start transaction
+                    $this->load->database();
+                    $this->db->trans_begin();
+                    // Create new Park Object
+                    $park = new Parking();
+                    $park->setRegNum($this->input->post('reg_num'));
+                    $park->setLocationId($this->input->post('location'));
+                    $park->setNoHour($this->input->post('no_hour'));
+                    $park->setDateTime(date("Y-m-d H:i:s"));
+
+                    // If save is not successful, roll-back transaction
+                    if (!$this->parking->create($park)) {
                         $this->db->trans_rollback();
                         $this->session->set_flashdata(
                             'error',
                             'There was a problem while processing. Please try again.'
                         );
                     } else {
-                        $this->db->trans_commit();
-                        $this->session->set_flashdata('message', 'Car Parked successfully');
-                        return redirect('/account/');
+                        // Create a new Payment Object
+                        $payment = new Payment();
+                        $payment->setParkingId($this->db->insert_id());
+                        $payment->setAmount(
+                            (function ($location_id, $hours) use ($locations) {
+                                foreach ($locations as $location) {
+                                    if ($location->getId() == $location_id) {
+                                        $tax = $location->getVat() * $hours;
+                                        $price = $location->getPrice() * $hours;
+                                        return $price + $tax;
+                                    }
+                                }
+                                throw new Exception("Location id invalid!");
+                            }) ($park->getLocationId(),$park->getNoHour())
+                        );
+                        if (!$this->payment->create($payment)) {
+                            $this->db->trans_rollback();
+                            $this->session->set_flashdata(
+                                'error',
+                                'There was a problem while processing. Please try again.'
+                            );
+                        } else {
+                            $this->db->trans_commit();
+                            $this->session->set_flashdata('message', 'Car Parked successfully');
+                            return redirect('/account/');
+                        }
                     }
                 }
             }

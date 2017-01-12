@@ -107,6 +107,17 @@ class Parking extends CI_Model
         $this->db->update('parking');
     }
 
+    public function checkParked($car_reg_num) {
+        $this->db->where('reg_num', $car_reg_num);
+        $this->db->where('is_parked', 1);
+        $park = $this->db->get('parking');
+        $result_array = [];
+        foreach ($park->result_array() as $row) {
+            $result_array[] = $this->loadObject($row);
+        }
+        return $result_array;
+    }
+
     public function loadObject(array $result)
     {
         $park = new Parking();
@@ -115,6 +126,7 @@ class Parking extends CI_Model
         $park->setLocationId($result['location_id']);
         $park->setIsParked($result['is_parked']);
         $park->setId($result['id']);
+        $park->setNoHour($result['no_hour']);
         $park->setCheckout($result['checkout']);
         return $park;
     }
