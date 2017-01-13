@@ -10,39 +10,28 @@
 
 <div class="form-group input-group-lg">
     <label for="name" >Name :</label>
-    <input name="name"  class="form-control" placeholder="Edit Name" type="text" value="<?php echo set_value('name'); ?>" />
+    <input name="name"  class="form-control" placeholder="Edit Name" type="text" value="<?php echo set_value('name', $user->getName()); ?>" />
     <?php echo form_error('name','<div class="alert alert-danger text-center">','</div>'); ?>      
         
 </div>
 
 <div class="form-group input-group-lg">
     <label for="email" >Email :</label>
-    <input name="email"  class="form-control" placeholder="Edit email" type="email" value="<?php echo set_value('email'); ?>" />
+    <input name="email"  class="form-control" placeholder="Edit email" type="email" value="<?php echo set_value('email', $user->getEmail()); ?>" />
     <?php echo form_error('email','<div class="alert alert-danger text-center">','</div>'); ?>      
         
 </div>
 
 <div class="form-group input-group-lg">
     <label for="address" >Address :</label>
-    <input name="address"  class="form-control" placeholder="Edit Address" type="text" value="<?php echo set_value('address'); ?>" />
+    <input name="address"  class="form-control" placeholder="Edit Address" type="text" value="<?php echo set_value('address', $user->getBillingAddress()); ?>" />
     <?php echo form_error('address','<div class="alert alert-danger text-center">','</div>'); ?>          
 </div>
 
-<div class="form-group input-group-lg">
-    <label for="password" >Password :</label>
-    <input name="password"  class="form-control" placeholder="Edit password" type="text" value="<?php echo set_value('password'); ?>" />
-    <?php echo form_error('password','<div class="alert alert-danger text-center">','</div>'); ?>          
-</div>
-
-<div class="form-group input-group-lg">
-    <label for="confirm_password" >Confirm password :</label>
-    <input name="confirm_password"  class="form-control" placeholder="Confirm password" type="text" value="<?php echo set_value('confirm_password'); ?>" />
-    <?php echo form_error('confirm_password','<div class="alert alert-danger text-center">','</div>'); ?>          
-</div>
 
 
 <div class="form-group input-group-lg">
-    <input  class="btn btn-danger-outline btn-lg"  type="submit" value="Edit User">   
+    <input  class="btn btn-danger-outline btn-lg"  type="submit" value="Update User">   
 </div>
 
     

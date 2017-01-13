@@ -131,6 +131,15 @@ class User extends CI_Model
         $this->db->update('user');
     }
 
+    public function update(User $user) {
+        $id = $user->getId();
+        unset($user->id);
+        unset($user->password);
+        unset($user->is_activated);
+        unset($user->is_admin);
+        return $this->db->update('user',$user,['id' => $id]);
+    }
+
     private function loadObject(array $result = null)
     {
         if (!$result) return false;

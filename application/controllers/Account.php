@@ -2,7 +2,7 @@
 
 class Account extends CI_Controller
 {
-
+    //Handling Index 
     public function index()
     {
         if (!$this->session->has_userdata('id')) {
@@ -13,7 +13,7 @@ class Account extends CI_Controller
         }
 
         $this->load->model(
-            ['car']
+            ['car', 'user']
         );
         $cars = $this->car->getAllByUserId(
             $this->session->userdata('id')
@@ -21,23 +21,31 @@ class Account extends CI_Controller
         $parking = $this->car->getUserParkedCars(
             $this->session->userdata('id')
         );
-        // echo "<pre>";
-        // var_dump($parking);die();
+        $user =  $this->session->userdata('id');
+        
+        $image = md5(strtolower(trim($this->session->userdata('email'))));
+
+        $image = 'https://www.gravatar.com/avatar/'.$image.'?s=400';
         
         $this->load->view(
             'layout/header',
             ['title' => "Car Park"]
         );
         $this->load->view('account/index', [
-            'name' => $this->session->userdata('name'),
-            'email' => $this->session->userdata('email'),
-            'address' => $this->session->userdata('billing_address'),
-            'cars' => $cars,
+            'name'      => $this->session->userdata('name'),
+            'email'     => $this->session->userdata('email'),
+            'address'   => $this->session->userdata('billing_address'),
+            'cars'      => $cars,
             'parkings'  => $parking,
+            'image'     => $image,
+            'user'      => $user
         ]);
         $this->load->view('layout/footer');
     }
 
+
+
+    //Handling AddCar Cars
     public function addcar()
     {
         if ($this->session->is_admin) {
@@ -107,7 +115,7 @@ class Account extends CI_Controller
         $this->load->view('layout/footer');
     }
 
-    //Edit Cars
+    //Handling Edit Cars
     public function editcar($car_id)
     {
         $car_id = urldecode($car_id);
@@ -325,7 +333,7 @@ class Account extends CI_Controller
         $this->load->view('layout/footer');
     }
 
-    //unparkcar
+    //Handling Unpacking Car
     public function unpark($parking_id)
     {
         if (!$this->session->has_userdata('id')) {
@@ -425,7 +433,7 @@ class Account extends CI_Controller
         $this->form_validation->set_rules(
             'name',
             'Full Name',
-            ['trim','required','max_lenght[100]']
+             ['trim','required', 'max_length[100]']
         );
 
         $this->form_validation->set_rules(
@@ -518,9 +526,9 @@ class Account extends CI_Controller
     }
 
     //Handling Edit user
-    public function edituser()
+    public function edituser($id)
     {
-         if ($this->session->is_admin) {
+        if ($this->session->is_admin) {
             return redirect('/account/');
         }
 
@@ -528,16 +536,32 @@ class Account extends CI_Controller
             return redirect('/account/login');
         }
 
-        
+
         $this->load->helper('form');
         $this->load->library(['form_validation']);
         $this->load->model(['user','activation']);
+
+        if (!$id) {
+            return redirect('/account');
+        }
+
+        // User must exist in db
+        if(!$user = $this->user->get($id)) {
+            $this->session->set_flashdata('message','User does not exist.');
+            return redirect('/account');
+        }
+        // User must be editing own car
+        if ($user->getId() !== $this->session->id) {
+            $this->session->set_flashdata('error','Thief Ole!!!');
+            return redirect('/account');
+        }
+        
 
         // validation rules
         $this->form_validation->set_rules(
             'name',
             'Full Name',
-            ['trim','required','max_lenght[100]']
+            ['trim','required', 'max_length[100]']
         );
 
         $this->form_validation->set_rules(
@@ -550,24 +574,32 @@ class Account extends CI_Controller
         $this->form_validation->set_rules(
             'email',
             'Email',
-            ['trim','required','valid_email', 'max_length[100]','is_unique[user.email]'],
-            ['is_unique' => "Email address is already registered."]
+            ['trim','required','valid_email', 'max_length[100]'],
+            ['required' => "Email Field can't be empty"]
         );
 
-        $this->form_validation->set_rules(
-            'password',
-            'password',
-            ['trim','required','min_length[8]']
-        );
-
-        $this->form_validation->set_rules(
-            'password_confirm',
-            'password confirmation',
-            ['trim','matches[password]']
-        );
+        if ($this->input->method(true) === "POST") {
+            if ($this->form_validation->run() == true) {
+                $user = new User();
+                $user->setId($id);
+                $user->setName($this->input->post('name'));
+                $user->setEmail($this->input->post('email'));
+                $user->setBillingAddress($this->input->post('address'));
+                if ($this->user->update($user)) {
+                    $this->session->set_flashdata(
+                        'message', 'User updated successfully!'
+                    );
+                    return redirect('/account/');
+                } else {
+                    $this->session->set_flashdata(
+                        'error', 'User could not be updated. Try again!'
+                    );
+                }
+            }
+        }
 
         $this->load->view('layout/header', ['title' => "Car Park | Edit User"]);
-        $this->load->view('account/edituser');
+        $this->load->view('account/edituser',['user' => $user]);
         $this->load->view('layout/footer');
     }
 
@@ -615,6 +647,7 @@ class Account extends CI_Controller
         $this->email->send();
     }
 
+    //Generating Token
     private function __generateToken($length = 20)
     {
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
