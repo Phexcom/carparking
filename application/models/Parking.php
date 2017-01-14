@@ -100,7 +100,16 @@ class Parking extends CI_Model
 
     public function getOvertimeParkings()
     {
-
+        $this->db->select(
+            'parking.id, parking.reg_num, parking.date_time, parking.no_hour,'.
+            'location.name, payment.amount, parking.checkout'
+        );
+        $this->db->from('parking');
+        $this->db->where('parking.checkout > DATE_ADD(parking.date_time, INTERVAL parking.no_hour HOUR)');
+        $this->db->join('location', 'parking.location_id = location.id');
+        $this->db->join('payment', 'payment.parking_id = parking.id');
+        $parkings = $this->db->get();
+        return $parkings->result();
     }
 
     public function getById($parking_id)
