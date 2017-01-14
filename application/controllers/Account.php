@@ -49,7 +49,7 @@ class Account extends CI_Controller
     public function addcar()
     {
         if ($this->session->is_admin) {
-            return redirect('/account/');
+            return redirect('/admin/');
         }
 
         if (!$this->session->has_userdata('id')) {
@@ -120,7 +120,7 @@ class Account extends CI_Controller
     {
         $car_id = urldecode($car_id);
         if ($this->session->is_admin) {
-            return redirect('/account/');
+            return redirect('/admin/');
         }
 
         if (!$this->session->has_userdata('id')) {
@@ -197,7 +197,7 @@ class Account extends CI_Controller
     public function parkcar()
     {
         if ($this->session->is_admin) {
-            return redirect('/account/');
+            return redirect('/admin/');
         }
         if (!$this->session->has_userdata('id')) {
             return redirect('/account/login');
@@ -340,7 +340,7 @@ class Account extends CI_Controller
             return redirect('/account/login');
         }
         if ($this->session->is_admin) {
-            return redirect('/account');
+            return redirect('/admin/');
         }
         if (!ctype_digit($parking_id) || $parking_id < 1) {
             return redirect('/account');
@@ -529,13 +529,12 @@ class Account extends CI_Controller
     public function edituser($id)
     {
         if ($this->session->is_admin) {
-            return redirect('/account/');
+            return redirect('/admin/');
         }
 
         if (!$this->session->has_userdata('id')) {
             return redirect('/account/login');
         }
-
 
         $this->load->helper('form');
         $this->load->library(['form_validation']);
@@ -589,7 +588,7 @@ class Account extends CI_Controller
                     $this->session->set_flashdata(
                         'message', 'User updated successfully!'
                     );
-                    return redirect('/account/');
+                    return $this->logout();
                 } else {
                     $this->session->set_flashdata(
                         'error', 'User could not be updated. Try again!'
