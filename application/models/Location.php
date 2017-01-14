@@ -42,7 +42,7 @@ class Location extends CI_Model
     }
 
     public function setCode($code) {
-        $this->code = $code;
+        $this->code = strtoupper($code);
     }
 
     public function setName($name) {
@@ -58,7 +58,7 @@ class Location extends CI_Model
     }
 
     public function create(Location $location) {
-
+        return $this->db->insert('location', $location);
     }
 
     public function getAll() {
