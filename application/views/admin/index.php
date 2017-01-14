@@ -162,28 +162,32 @@
 
        <div class="panel panel-default m-b-md hidden-xs">
         <div class="panel-body">
-          <h4 class="m-t-0">Manage Cars</h4>
-          <a href="/account/addcar" class="btn btn-primary-outline btn-sm">Add a new Car</a>
+          <h4 class="m-t-0">Location</h4>
+          <a href="/account/addcar" class="btn btn-primary-outline btn-sm">Add New Location</a>
           <hr>
           <ul style="list-style-type:none;">
             <li>
-              <strong>Car Registration No: </strong>
+              <strong>Location Code: </strong>
             </li>
             <li>
-              <strong>Car Color: </strong>
+              <strong>Location name: </strong>
             </li>
             <li>
-              <strong>Car Brand: </strong>
+              <strong>Price Vat: </strong>
             </li>
-            <li>
-              <strong>Car Make: </strong>
           </ul>
-          <a href="/account/editcar/" class="btn btn-warning-outline btn-sm">Edit Car</a>
+          <a href="/account/editcar/" class="btn btn-warning-outline btn-sm">Edit Location</a>
           <a class="btn btn-danger-outline btn-sm">Delete Car</a>
           <!-- <hr> -->
          
         </div>
       </div>
+code
+name
+price
+vat
+
+     
 
      
    
