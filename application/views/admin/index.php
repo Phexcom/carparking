@@ -36,7 +36,7 @@
           </li>
           <li>
             <button class="btn btn-default navbar-btn navbar-btn-avitar" data-toggle="popover">
-              <img class="img-circle" src="<?php  echo $image?>">
+              <img class="img-circle" src="">
             </button>
           </li>
         </ul>
@@ -67,14 +67,14 @@
       <div class="panel panel-default panel-profile m-b-md">
         <div class="panel-heading" style="background-image: url(/images/car.jpg);"></div>
         <div class="panel-body text-center">
-          <a href="/account/edituser/<?php echo($user) ;?>">
+          <a href="/account/edituser/">
             <img
               class="panel-profile-img"
-              src="<?php  echo $image?>">
+              src="">
           </a>
 
           <h5 class="panel-title">
-            <a class="text-inherit" href="#"><?php echo $name; ?></a>
+            <a class="text-inherit" href="#">Admin</a>
           </h5>
 
           <p class="m-b-md">I wish i was a little bit taller, wish i was a baller, wish i had a girl… also.</p>
@@ -99,11 +99,11 @@
 
       <div class="panel panel-default visible-md-block visible-lg-block">
         <div class="panel-body">
-          <h5 class="m-t-0">About <small>· <a href="/account/edituser/<?php echo($user) ;?>">Edit</a></small></h5>
+          <h5 class="m-t-0">About <small>· <a href="/account/edituser/">Edit</a></small></h5>
           <ul class="list-unstyled list-spaced">
-            <li><span class="text-muted icon icon-calendar m-r"></span>Name: <a href="#"><?php echo $name; ?></a>
-            <li><span class="text-muted icon icon-users m-r"></span>Email: <a href="#"><?php echo $email; ?></a>
-            <li><span class="text-muted icon icon-location-pin m-r"></span>Lives in <a href="#"><?php echo $address; ?></a>
+            <li><span class="text-muted icon icon-calendar m-r"></span>Name: <a href="#">Admin Nma</a>
+            <li><span class="text-muted icon icon-users m-r"></span>Email: <a href="#">Admin Emil</a>
+            <li><span class="text-muted icon icon-location-pin m-r"></span>Lives in <a href="#">Admin Adress</a>
           </ul>
         </div>
       </div>
@@ -128,30 +128,30 @@
           <h3 class="center">Parked Cars</h3>
         </li>
 
-      <?php foreach ($parkings as $parking): ?>
+      
         <li class="media list-group-item p-a">
           <div class="media-body">
             <div class="media-heading">
-              <small class="pull-right text-muted"><strong>No Of Hours: <?= $parking->no_hour; ?></strong></small>
-              <p><strong>Car Registration Number: </strong><?= $parking->reg_id; ?></p>
+              <small class="pull-right text-muted"><strong>No Of Hours: </strong></small>
+              <p><strong>Car Registration Number: </strong></p>
             </div>
 
             <p>
-                <strong>Time Car was Parked: </strong><?= $parking->date_time; ?>
+                <strong>Time Car was Parked: </strong>
             </p>
             <p>
-                <strong>Parking Location: </strong><?= $parking->name; ?>
+                <strong>Parking Location: </strong>
             </p>
             <p>
-                <strong>Parking Cost: </strong>AED <?= $parking->amount; ?>
+                <strong>Parking Cost: </strong>AED
             </p>
                <a class="btn btn-danger-outline btn-sm"
-                  href="/account/unpark/<?php echo($parking->id) ;?>">
+                  href="/account/unpark/">
                   Unpark this car
                </a>
           </div>
         </li>
-        <?php endforeach; ?> 
+       
       </ul>
     </div>
     <div class="col-md-3">
@@ -164,26 +164,24 @@
         <div class="panel-body">
           <h4 class="m-t-0">Manage Cars</h4>
           <a href="/account/addcar" class="btn btn-primary-outline btn-sm">Add a new Car</a>
-          <?php foreach ($cars as $car): ?>
           <hr>
           <ul style="list-style-type:none;">
             <li>
-              <strong>Car Registration No: </strong><?= $car->getRegId()?>
+              <strong>Car Registration No: </strong>
             </li>
             <li>
-              <strong>Car Color: </strong><?= $car->getColor()?>
+              <strong>Car Color: </strong>
             </li>
             <li>
-              <strong>Car Brand: </strong><?= $car->getBrand()?>
+              <strong>Car Brand: </strong>
             </li>
             <li>
-              <strong>Car Make: </strong><?= $car->getMake()?>
-            </li>
+              <strong>Car Make: </strong>
           </ul>
-          <a href="/account/editcar/<?php echo($car->getRegId()); ?>" class="btn btn-warning-outline btn-sm">Edit Car</a>
+          <a href="/account/editcar/" class="btn btn-warning-outline btn-sm">Edit Car</a>
           <a class="btn btn-danger-outline btn-sm">Delete Car</a>
           <!-- <hr> -->
-          <?php endforeach; ?> 
+         
         </div>
       </div>
 
