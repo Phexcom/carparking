@@ -9,7 +9,7 @@ class Account extends CI_Controller
             return redirect('/account/login');
         }
         if ($this->session->is_admin) {
-            return redirect('/account');
+            return redirect('/admin/');
         }
 
         $this->load->model(
