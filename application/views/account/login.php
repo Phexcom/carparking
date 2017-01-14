@@ -14,6 +14,16 @@
         <strong><?=$error;?></strong>
     </div>
 <?php endif; ?>   
+
+<pre>Test Admin 
+Username: carphex@gmail.com
+Password: Password
+<br>
+Activated User
+username: otutuogheneovie@hotmail.com
+password: Password
+
+</pre>
 <?php echo form_open(); ?>
 
 <div class="form-group input-group-lg">

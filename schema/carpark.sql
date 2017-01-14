@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 09, 2017 at 10:42 PM
+-- Generation Time: Jan 14, 2017 at 07:52 PM
 -- Server version: 5.6.34
 -- PHP Version: 7.1.0
 
@@ -13,6 +13,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `carparking`
 --
+CREATE DATABASE IF NOT EXISTS `carparking` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `carparking`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `activation`
+--
+
+CREATE TABLE `activation` (
+  `account_id` int(11) NOT NULL,
+  `token` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -27,6 +40,14 @@ CREATE TABLE `car` (
   `brand` varchar(50) NOT NULL,
   `owner` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `car`
+--
+
+INSERT INTO `car` (`reg_id`, `color`, `make`, `brand`, `owner`) VALUES
+('23TGD', 'Green', 'Chevy', 'Camaro', 2),
+('DUB238', 'White', 'Charger', 'Dodge', 2);
 
 -- --------------------------------------------------------
 
@@ -72,6 +93,14 @@ CREATE TABLE `parking` (
   `checkout` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `parking`
+--
+
+INSERT INTO `parking` (`reg_num`, `date_time`, `location_id`, `is_parked`, `no_hour`, `id`, `checkout`) VALUES
+('23TGD', '2017-01-14 19:50:52', 2, 1, 23, 1, NULL),
+('DUB238', '2017-01-14 19:51:39', 1, 1, 1, 2, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -84,6 +113,14 @@ CREATE TABLE `payment` (
   `amount` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `payment`
+--
+
+INSERT INTO `payment` (`id`, `parking_id`, `amount`) VALUES
+(1, 1, '552.00'),
+(2, 2, '52.00');
+
 -- --------------------------------------------------------
 
 --
@@ -94,12 +131,20 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `billing_address` varchar(250) DEFAULT NULL,
-  `card_no` int(20) DEFAULT NULL,
+  `card_no` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `password` varchar(100) NOT NULL,
   `is_activated` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `name`, `billing_address`, `card_no`, `email`, `is_admin`, `password`, `is_activated`) VALUES
+(1, 'admin', 'Mission House, Bureerat, Mission House, Bureerat', '4532876164843874', 'carphex@gmail.com', 1, '$2y$10$sW/VPEu4NrQbg6OWiQeVceLAKj4DltMGksHEkJCwwYKlviZMjLH5m', 1),
+(2, 'Phexcom', '182-21 150th Avenue, #DXB 562832', '4716144926977854', 'otutuogheneovie@hotmail.com', 0, '$2y$10$iaasOpb5Ue56TRxy5TodfuifleuawgQE36q8ElwQ4zFGxnCYGTyx.', 1);
 
 --
 -- Indexes for dumped tables
@@ -153,17 +198,17 @@ ALTER TABLE `location`
 -- AUTO_INCREMENT for table `parking`
 --
 ALTER TABLE `parking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --

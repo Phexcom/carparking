@@ -108,22 +108,14 @@
         </div>
       </div>
 
-      <div class="panel panel-default m-b-md hidden-xs">
-        <div class="panel-body">
-          <h5 class="m-t-0">Edit Credit Cards</h5>
-          <p><strong>It might be time to visit Iceland.</strong> Iceland is so chill, and everything looks cool here. Also, we heard the people are pretty nice. What are you waiting for?</p>
-          <button class="btn btn-primary-outline btn-sm">Manage Credit Cards</button>
-        </div>
-      </div>
-
+      
     </div>
 
     <div class="col-md-6">
       <ul class="list-group media-list media-list-stream">
-
-        <li class="media list-group-item p-a">
-          <a href="/account/parkcar" type="button" class="btn btn-primary-outline btn-block btn-lg">Park A Car</a>
-        </li>
+      <li>
+      
+      </li>
         <li class="media list-group-item p-a">
           <h3 class="center">Parked Cars</h3>
         </li>
@@ -145,10 +137,7 @@
             <p>
                 <strong>Parking Cost: </strong>AED
             </p>
-               <a class="btn btn-danger-outline btn-sm"
-                  href="/account/unpark/">
-                  Unpark this car
-               </a>
+              
           </div>
         </li>
        
