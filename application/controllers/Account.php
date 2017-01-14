@@ -43,8 +43,6 @@ class Account extends CI_Controller
         $this->load->view('layout/footer');
     }
 
-
-
     //Handling AddCar Cars
     public function addcar()
     {

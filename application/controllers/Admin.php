@@ -12,11 +12,15 @@ class Admin extends CI_Controller
 
     public function index()
     {
+        $this->load->model('parking');
+        $active_parkings = $this->parking->getAll();
+        $data['active_parkings'] = $active_parkings;
+
         $this->load->view(
             'layout/header',
             ['title' => "Car Park"]
         );
-        $this->load->view('admin/index');
+        $this->load->view('admin/index', $data);
         $this->load->view('layout/footer');
     }
 

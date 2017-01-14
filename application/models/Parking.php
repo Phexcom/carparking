@@ -85,12 +85,22 @@ class Parking extends CI_Model
 
     public function getAll()
     {
-        $park = $this->db->get('parking');
-        $result_array = [];
-        foreach ($park->result_array() as $row) {
-            $result_array[] = $this->loadObject($row);
-        }
-        return $result_array;
+        $this->db->select(
+            'parking.id, parking.reg_num, parking.date_time, parking.no_hour,'.
+            'location.name, payment.amount'
+        );
+        $this->db->from('parking');
+        $this->db->where('parking.is_parked', 1);
+        $this->db->join('location', 'parking.location_id = location.id');
+        $this->db->join('payment', 'payment.parking_id = parking.id');
+
+        $parkings = $this->db->get();
+        return $parkings->result();
+    }
+
+    public function getOvertimeParkings()
+    {
+
     }
 
     public function getById($parking_id)
